@@ -1,17 +1,17 @@
 {
-	"name": "sapphire-bot",
-	"version": "2.0.0",
+	"name": "tank-game-bot",
+	"version": "0.0.1",
 	"packageManager": "yarn@3.5.1",
 	"private": true,
-	"license": "MIT",
-	"main": "dist/Bot.js",
+	"license": "AGPL-3.0-or-later",
+	"main": "dist/main.js",
 	"imports": {
 		"#root/*": "./dist/*.js",
 		"#lib/*": "./dist/lib/*.js"
 	},
 	"type": "module",
 	"scripts": {
-		"start": "node dist/Bot.js --enable-source-maps",
+		"start": "node dist/main.js --enable-source-maps",
 		"build": "tsc -b src",
 		"watch": "yarn tsc-watch -b src --onSuccess \"yarn start\"",
 		"lint": "eslint --fix --ext .ts src",
@@ -21,9 +21,7 @@
 	"dependencies": {
 		"@skyra/env-utilities": "^1.2.0",
 		"@skyra/http-framework": "^1.0.0",
-		"@skyra/logger": "^2.0.0",
-		"colorette": "^2.0.19",
-		"discord.js": "^14.9.0"
+		"@skyra/logger": "^2.0.0"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^17.6.1",
