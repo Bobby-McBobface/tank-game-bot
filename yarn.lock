@@ -2791,6 +2791,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pocketbase@npm:^0.15.2":
+  version: 0.15.2
+  resolution: "pocketbase@npm:0.15.2"
+  checksum: 27f2eb38cccc2735f22afbcb36f5bd1da81819c3c8c3e1a5bd9d8a317b0833bdda0d57057df70c9a6eea7cf9a29cf0d3ee90b3bdb3c495087c820fafc2ffc054
+  languageName: node
+  linkType: hard
+
 "prelude-ls@npm:^1.2.1":
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
@@ -3362,6 +3369,7 @@ __metadata:
     eslint-plugin-prettier: ^4.2.1
     husky: ^8.0.3
     lint-staged: ^13.2.1
+    pocketbase: ^0.15.2
     prettier: ^2.8.7
     pretty-quick: ^3.1.3
     tsc-watch: ^6.0.0

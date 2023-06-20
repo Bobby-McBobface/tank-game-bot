@@ -21,7 +21,8 @@
 	"dependencies": {
 		"@skyra/env-utilities": "^1.2.0",
 		"@skyra/http-framework": "^1.0.0",
-		"@skyra/logger": "^2.0.0"
+		"@skyra/logger": "^2.0.0",
+		"pocketbase": "^0.15.2"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^17.6.1",
