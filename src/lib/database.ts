@@ -8,6 +8,7 @@ export interface PlayersRecord extends Record {
 	user_id: string;
 	guild_id: string;
 	avatar: string;
+	avatar_emote_id: string;
 	x_pos: number;
 	y_pos: number;
 	health: number;

@@ -68,7 +68,7 @@ export class UserCommand extends Command {
 		formData.append('y_pos', `${y_pos}`);
 		formData.append('health', `${health}`);
 		formData.append('action_points', `${action_points}`);
-		formData.append('emote_id', `${emote_id}`);
+		formData.append('avatar_emote_id', `${emote_id}`);
 		formData.append('avatar', new Blob([avatarData]));
 		formData.append('last_action_at', last_action_at);
 
