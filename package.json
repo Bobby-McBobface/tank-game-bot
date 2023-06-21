@@ -22,6 +22,7 @@
 		"@skyra/env-utilities": "^1.2.0",
 		"@skyra/http-framework": "^1.0.0",
 		"@skyra/logger": "^2.0.0",
+		"canvas": "^2.11.2",
 		"pocketbase": "^0.15.2"
 	},
 	"devDependencies": {

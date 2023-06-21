@@ -1,4 +1,5 @@
 import '#lib/setup';
+import '#lib/database';
 import { envIsDefined, envParseString } from '@skyra/env-utilities';
 import { Client, container, Registry } from '@skyra/http-framework';
 
