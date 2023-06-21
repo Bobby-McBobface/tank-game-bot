@@ -1,4 +1,4 @@
-import { Command, RegisterCommand } from '@skyra/http-framework';
+import { Command, RegisterCommand, RegisterSubCommand } from '@skyra/http-framework';
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
 import { ButtonStyle, type APIActionRowComponent, type APIButtonComponent } from 'discord-api-types/v10';
 import { type PlayersRecord } from '#lib/database';
@@ -10,7 +10,34 @@ import { type PlayersRecord } from '#lib/database';
 		.setDMPermission(false)
 )
 export class UserCommand extends Command {
-	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
+	@RegisterSubCommand((builder) =>
+		builder //
+			.setName('move')
+			.setDescription('Move your tank')
+	)
+	public async move(interaction: Command.ChatInputInteraction) {
+		return this.sendButtons(interaction, Actions.move);
+	}
+
+	@RegisterSubCommand((builder) =>
+		builder //
+			.setName('give-points')
+			.setDescription('Give points to someone')
+	)
+	public async givePoints(interaction: Command.ChatInputInteraction) {
+		return this.sendButtons(interaction, Actions.attack);
+	}
+
+	@RegisterSubCommand((builder) =>
+		builder //
+			.setName('attack')
+			.setDescription('Attack someone')
+	)
+	public async attack(interaction: Command.ChatInputInteraction) {
+		return this.sendButtons(interaction, Actions.attack);
+	}
+
+	private async sendButtons(interaction: Command.ChatInputInteraction, action: Actions) {
 		await interaction.defer();
 		const data = await this.container.pocketbase
 			.collection('players')
@@ -47,16 +74,31 @@ export class UserCommand extends Command {
 				} else {
 					// Otherwise, find the player in the data array that matches the x_pos and y_pos
 					const player = data.find((p) => p.x_pos === myself.x_pos + dX && p.y_pos === myself.y_pos + dY);
-
 					if (player) {
-						// If there is a player, set the label to their emoji
 						button.setEmoji({ name: player.user_id, id: player.avatar_emote_id });
-						// Set the customId to executor ID, target ID, real X and Y position of target
-						button.setCustomId(`action-handler.${myself.user_id}.${player.user_id}.${myself.x_pos + dX}.${myself.y_pos + dY}`);
+					}
+
+					// Handle movement
+					if (action === Actions.move) {
+						if (player) {
+							// Ensure 2 players cannot overlap
+							button.setDisabled(true);
+						} else {
+							// Set the customId to the player's ID and the coordinates they want to move to
+							button.setCustomId(`movement-handler.${myself.id}.${myself.x_pos + dX}.${myself.y_pos + dY}`);
+							button.setLabel('឵');
+						}
 					} else {
-						// Otherwise, disable the button and set the label to "Empty"
-						button.setDisabled(true);
-						button.setLabel('឵');
+						// Handle giving points and attacking
+						// eslint-disable-next-line no-lonely-if
+						if (player) {
+							// Set the customId to action, player's pocketbase ID and target's pocketbase ID
+							button.setCustomId(`action-handler.${action}.${myself.id}.${player.id}`);
+						} else {
+							// Otherwise, disable the button and set the label to "Empty"
+							button.setDisabled(true);
+							button.setLabel('឵');
+						}
 					}
 				}
 
@@ -69,4 +111,10 @@ export class UserCommand extends Command {
 		}
 		return interaction.followup({ components: rows });
 	}
+}
+
+export enum Actions {
+	move,
+	give_points,
+	attack
 }

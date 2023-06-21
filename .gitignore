@@ -32,3 +32,6 @@ package-lock.json
 pb_data
 pocketbase
 pocketbase.exe
+
+# Editors
+.vscode/
