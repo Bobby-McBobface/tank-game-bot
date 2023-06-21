@@ -12,6 +12,7 @@ export interface PlayersRecord extends Record {
 	x_pos: number;
 	y_pos: number;
 	health: number;
+	action_points: number;
 	last_action_at: string;
 }
 

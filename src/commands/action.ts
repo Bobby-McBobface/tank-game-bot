@@ -2,6 +2,7 @@ import { Command, RegisterCommand, RegisterSubCommand } from '@skyra/http-framew
 import { ActionRowBuilder, ButtonBuilder } from '@discordjs/builders';
 import { ButtonStyle, type APIActionRowComponent, type APIButtonComponent } from 'discord-api-types/v10';
 import { type PlayersRecord } from '#lib/database';
+import { Actions } from '#lib/util';
 
 @RegisterCommand((builder) =>
 	builder //
@@ -111,10 +112,4 @@ export class UserCommand extends Command {
 		}
 		return interaction.followup({ components: rows });
 	}
-}
-
-export enum Actions {
-	move,
-	give_points,
-	attack
 }

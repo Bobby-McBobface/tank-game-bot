@@ -1,10 +1,11 @@
 import { type PlayersRecord } from '#lib/database';
-import { container } from '@skyra/http-framework';
 
 // Define a function to check if the user can execute an action
-export async function canExecuteAction(userId: string) {
-	// Query the database for the user by their id using the collection method
-	const user = await container.pocketbase.collection('players').getOne<PlayersRecord>(userId);
+export function canExecuteActionRequiringPoints(user: PlayersRecord) {
+	// If the user has no action points, return false
+	if (user.action_points <= 0 || user.health <= 0) {
+		return false;
+	}
 
 	// Get the current timestamp in milliseconds
 	const now = Date.now();
@@ -22,4 +23,10 @@ export async function canExecuteAction(userId: string) {
 	}
 	// Otherwise, return false
 	return false;
+}
+
+export enum Actions {
+	move,
+	give_points,
+	attack
 }
