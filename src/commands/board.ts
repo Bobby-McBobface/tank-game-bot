@@ -18,6 +18,8 @@ export class UserCommand extends Command {
 		1: 'red'
 	} as const;
 
+	private gridSize = 40;
+
 	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
 		await interaction.defer();
 
@@ -37,12 +39,12 @@ export class UserCommand extends Command {
 		// Set the fill style to the given color
 		this.ctx.fillStyle = color;
 		// Draw a rectangle with 40 by 40 pixels at the given x and y coordinates
-		this.ctx.fillRect(x * 40, y * 40, 40, 40);
+		this.ctx.fillRect(x * this.gridSize, y * this.gridSize, this.gridSize, this.gridSize);
 		// Set the stroke style to black
 		this.ctx.strokeStyle = 'black';
 		this.ctx.lineWidth = 1;
 		// Draw a border around the rectangle
-		this.ctx.strokeRect(x * 40, y * 40, 40, 40);
+		this.ctx.strokeRect(x * this.gridSize, y * this.gridSize, this.gridSize, this.gridSize);
 	}
 
 	// Define a function to draw an avatar
@@ -52,7 +54,7 @@ export class UserCommand extends Command {
 		// Set the image source to the file URL
 		const image = await loadImage(Buffer.from(await (await fetch(fileURL)).arrayBuffer()));
 		// Draw the image with 40 by 40 pixels at the given x and y coordinates
-		this.ctx.drawImage(image, x * 40, y * 40, 40, 40);
+		this.ctx.drawImage(image, x * this.gridSize, y * this.gridSize, this.gridSize, this.gridSize);
 		// Draw a border around the rectangle depending on the health
 		this.ctx.strokeStyle = this.healthColours[player.health as 3 | 2 | 1];
 		this.ctx.lineWidth = 4;
@@ -64,8 +66,8 @@ export class UserCommand extends Command {
 	private async createGrid(players: PlayersRecord[]) {
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		// Loop through the rows and columns of the grid. Draw the cells first, then draw the avatars
-		for (let x = 0; x < 16; x++) {
-			for (let y = 0; y < 10; y++) {
+		for (let x = 0; x < BOARD_WIDTH; x++) {
+			for (let y = 0; y < BOARD_HEIGHT; y++) {
 				// Define the color variable
 				let color: string;
 				// If the sum of x and y is even, set the color to dark brown
