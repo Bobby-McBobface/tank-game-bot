@@ -14,8 +14,8 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 			return interaction.followup({ content: 'Please obtain more action points or wait.' });
 		}
 
-		// Calculate the L1 distance between the user and the target by their x_pos and y_pos
-		const distance = Math.abs(user.x_pos - Number(newX)) + Math.abs(user.y_pos - Number(newY));
+		// Calculate the distance between the user and the target by their x_pos and y_pos
+		const distance = Math.max(Math.abs(user.x_pos - Number(newX)), Math.abs(user.y_pos - Number(newY)));
 
 		// If the distance is less than or equal to 2, tell the user off
 		if (distance > 2) {
