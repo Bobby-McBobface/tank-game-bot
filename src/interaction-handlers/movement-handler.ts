@@ -3,8 +3,12 @@ import { InteractionHandler } from '@skyra/http-framework';
 import { canExecuteActionRequiringPoints } from '#lib/util';
 
 export class MessageComponentInteractionHandler extends InteractionHandler {
-	public async run(interaction: InteractionHandler.Interaction, [userId, newX, newY]: [string, string, string]) {
-		await interaction.deferUpdate();
+	public async run(interaction: InteractionHandler.ButtonInteraction, [user_id, userId, newX, newY]: [string, string, string, string]) {
+		// Don't allow other users to hijack buttons
+		if (interaction.user.id !== user_id) {
+			return interaction.deferUpdate();
+		}
+		await interaction.defer();
 
 		// Query the database for the user and the target by their ids using the collection method
 		const user = await this.container.pocketbase.collection('players').getOne<PlayersRecord>(userId);

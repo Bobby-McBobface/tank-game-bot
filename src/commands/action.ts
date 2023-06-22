@@ -94,7 +94,7 @@ export class UserCommand extends Command {
 								button.setDisabled(true);
 							} else {
 								// Set the customId to the player's ID and the coordinates they want to move to
-								button.setCustomId(`movement-handler.${myself.id}.${realX}.${realY}`);
+								button.setCustomId(`movement-handler.${interaction.user.id}.${myself.id}.${realX}.${realY}`);
 								button.setLabel('឵');
 							}
 							break;
@@ -102,7 +102,7 @@ export class UserCommand extends Command {
 						case Actions.attack:
 							if (player) {
 								// Set the customId to action, player's pocketbase ID and target's pocketbase ID
-								button.setCustomId(`action-handler.${action}.${myself.id}.${player.id}`);
+								button.setCustomId(`action-handler.${interaction.user.id}.${action}.${myself.id}.${player.id}`);
 							} else {
 								// Otherwise, disable the button and set the label to "Empty"
 								button.setDisabled(true);
