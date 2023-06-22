@@ -1,3 +1,4 @@
+import { BOARD_HEIGHT, BOARD_WIDTH } from '#lib/config';
 import { Command, RegisterCommand } from '@skyra/http-framework';
 import { Routes, type RESTPostAPIGuildEmojiResult, type RESTPostAPIGuildEmojiJSONBody } from 'discord-api-types/v10';
 
@@ -49,9 +50,9 @@ export class UserCommand extends Command {
 
 		const emote_id = emojiData.id;
 
-		// Generate a random x_pos and y_pos between 1 and 16 and 1 and 10 respectively
-		const x_pos = Math.floor(Math.random() * 16) + 1;
-		const y_pos = Math.floor(Math.random() * 10) + 1;
+		// Generate a random x_pos and y_pos between 0 and BOARD_WIDTH and 0 and BOARD_HEIGHT respectively
+		const x_pos = Math.floor(Math.random() * BOARD_WIDTH);
+		const y_pos = Math.floor(Math.random() * BOARD_HEIGHT);
 
 		// Set the health to 3 and action points to 0
 		const health = 3;

@@ -76,7 +76,7 @@ export class UserCommand extends Command {
 					button.setDisabled(true);
 					button.setEmoji({ name: myself.user_id, id: myself.avatar_emote_id });
 					button.setStyle(ButtonStyle.Secondary);
-				} else if (realX < 0 || realX > BOARD_WIDTH || realY < 0 || realY > BOARD_HEIGHT) {
+				} else if (realX < 0 || realX >= BOARD_WIDTH || realY < 0 || realY >= BOARD_HEIGHT) {
 					button.setDisabled(true);
 					button.setLabel('឵');
 					button.setStyle(ButtonStyle.Secondary);
