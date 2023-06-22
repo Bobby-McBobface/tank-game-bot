@@ -10,14 +10,14 @@ import { Routes, type RESTPostAPIGuildEmojiResult, type RESTPostAPIGuildEmojiJSO
 )
 export class UserCommand extends Command {
 	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
-		// Get the user_id, guild_id, and avatar hash from the interaction
-		if (!interaction.guild_id || !interaction.member) {
+		if (!interaction.guild_id) {
 			return interaction.reply({ content: 'You must run this command in a server, not a DM.' });
 		}
 		await interaction.defer();
-		const user_id = interaction.member.user.id;
+		// Get the user_id, guild_id, and avatar hash from the interaction
+		const user_id = interaction.user.id;
 		const { guild_id } = interaction;
-		const { avatar } = interaction.member.user;
+		const { avatar } = interaction.user;
 
 		// Check if the player is already in the game by querying the database
 		const player = await this.container.pocketbase.collection('players').getList(1, 1, {
@@ -31,9 +31,7 @@ export class UserCommand extends Command {
 		let avatarUrl;
 		if (avatar === null) {
 			avatarUrl = this.container.rest.cdn.defaultAvatar(
-				Number(interaction.member.user.discriminator)
-					? Number(interaction.member.user.discriminator) % 5
-					: Number((BigInt(user_id) >> 25n) % 6n)
+				Number(interaction.user.discriminator) ? Number(interaction.user.discriminator) % 5 : Number((BigInt(user_id) >> 25n) % 6n)
 			);
 		} else {
 			avatarUrl = this.container.rest.cdn.avatar(user_id, avatar, { size: 128, extension: 'png' });

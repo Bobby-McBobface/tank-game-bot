@@ -43,8 +43,8 @@ export class UserCommand extends Command {
 		await interaction.defer();
 		const data = await this.container.pocketbase
 			.collection('players')
-			.getFullList<PlayersRecord>({ filter: `guild_id='${interaction.guildId}'` });
-		const myself = data.find((v) => v.user_id === interaction.member?.user.id);
+			.getFullList<PlayersRecord>({ filter: `guild_id='${interaction.guild_id}'` });
+		const myself = data.find((v) => v.user_id === interaction.user.id);
 		if (!myself) {
 			return interaction.followup({ content: 'You have not joined the game.' });
 		}
