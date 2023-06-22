@@ -1,7 +1,8 @@
 import PocketBase, { Record } from 'pocketbase';
 import { container } from '@skyra/http-framework';
+import { envParseString } from '@skyra/env-utilities';
 
-const pb = new PocketBase('http://127.0.0.1:8090');
+const pb = new PocketBase(envParseString('POCKETBASE_URL'));
 container.pocketbase = pb;
 
 export interface PlayersRecord extends Record {

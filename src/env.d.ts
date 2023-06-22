@@ -3,6 +3,7 @@ declare module '@skyra/env-utilities' {
 		DISCORD_TOKEN: string;
 		DISCORD_PUBLIC_KEY: string;
 		GUILD_ID: string;
+		POCKETBASE_URL: string;
 	}
 }
 
