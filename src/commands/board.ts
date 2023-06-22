@@ -1,3 +1,4 @@
+import { BOARD_HEIGHT, BOARD_WIDTH } from '#lib/config';
 import type { PlayersRecord } from '#lib/database';
 import { Command, RegisterCommand } from '@skyra/http-framework';
 import { createCanvas, loadImage } from 'canvas';
@@ -79,8 +80,8 @@ export class UserCommand extends Command {
 			}
 		}
 
-		for (let x = 0; x < 16; x++) {
-			for (let y = 0; y < 10; y++) {
+		for (let x = 0; x < BOARD_WIDTH; x++) {
+			for (let y = 0; y < BOARD_HEIGHT; y++) {
 				// Query the database for a user at the current position
 				const row = players.find((v) => v.x_pos === x && v.y_pos === y);
 
