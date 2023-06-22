@@ -1,6 +1,6 @@
 import '#lib/setup';
 import '#lib/database';
-import { envIsDefined, envParseString } from '@skyra/env-utilities';
+import { envIsDefined, envParseString, envParseInteger } from '@skyra/env-utilities';
 import { Client, container, Registry } from '@skyra/http-framework';
 
 const client = new Client();
@@ -20,8 +20,8 @@ await client.load();
 
 client.on('error', (error) => container.logger.error(error));
 
-const address = '[::]';
-const port = 3000;
+const address = envParseString('HTTP_ADDRESS', '[::]');
+const port = envParseInteger('HTTP_PORT', 3000);
 
 await client.listen({ address, port });
 console.log(`Listening on ${address}:${port}`);
