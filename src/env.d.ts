@@ -6,6 +6,8 @@ declare module '@skyra/env-utilities' {
 		DISCORD_PUBLIC_KEY: string;
 		GUILD_ID: string;
 		POCKETBASE_URL: string;
+		POCKETBASE_EMAIL: string;
+		POCKETBASE_PASSWORD: string;
 		HTTP_ADDRESS: string;
 		HTTP_PORT: IntegerString;
 	}

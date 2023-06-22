@@ -3,6 +3,7 @@ import { container } from '@skyra/http-framework';
 import { envParseString } from '@skyra/env-utilities';
 
 const pb = new PocketBase(envParseString('POCKETBASE_URL'));
+await pb.admins.authWithPassword(envParseString('POCKETBASE_EMAIL'), envParseString('POCKETBASE_PASSWORD'));
 container.pocketbase = pb;
 
 export interface PlayersRecord extends Record {
