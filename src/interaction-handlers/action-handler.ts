@@ -1,6 +1,7 @@
 import type { PlayersRecord } from '#lib/database';
 import { canExecuteActionRequiringPoints, Actions } from '#lib/util';
 import { InteractionHandler } from '@skyra/http-framework';
+import { Routes } from 'discord-api-types/v10';
 
 export class MessageComponentInteractionHandler extends InteractionHandler {
 	public async run(interaction: InteractionHandler.ButtonInteraction, [user_id, action, userId, targetId]: [string, Actions, string, string]) {
@@ -31,14 +32,14 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 		if (distance > 2) {
 			return interaction.followup({ content: 'You are not in range. You and/or your target have moved since the buttons were sent.' });
 		}
-		if (Number(action) === Actions.attack) await this.attack(user, target);
+		if (Number(action) === Actions.attack) await this.attack(user, target, interaction);
 		else if (Number(action) === Actions.send_points) await this.give_points(user, target);
 		else return interaction.followup({ content: 'This should never happen.' });
 
 		return interaction.followup({ content: 'Success.' });
 	}
 
-	private async attack(user: PlayersRecord, target: PlayersRecord) {
+	private async attack(user: PlayersRecord, target: PlayersRecord, interaction: InteractionHandler.ButtonInteraction) {
 		// TODO: transactions when they get added to Pocketbase
 		await this.container.pocketbase.collection('players').update<PlayersRecord>(user.id, {
 			action_points: user.action_points - 1,
@@ -47,6 +48,15 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 		await this.container.pocketbase.collection('players').update<PlayersRecord>(target.id, {
 			health: target.health - 1
 		});
+
+		if (target.health - 1 <= 0) {
+			// Give alive role and assign it
+			const guild = await this.container.pocketbase.collection('guilds').getList(1, 1, { filter: `guild_id='${interaction.guild_id}'` });
+			if (interaction.guild_id && guild.items.length > 0 && guild.items[0].alive_role && guild.items[0].dead_role) {
+				await this.container.rest.delete(Routes.guildMemberRole(interaction.guild_id, interaction.user.id, guild.items[0].alive_role));
+				await this.container.rest.put(Routes.guildMemberRole(interaction.guild_id, interaction.user.id, guild.items[0].dead_role));
+			}
+		}
 	}
 
 	private async give_points(user: PlayersRecord, target: PlayersRecord) {

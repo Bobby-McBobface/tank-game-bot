@@ -93,6 +93,12 @@ export class UserCommand extends Command {
 		// Upload the data to the database using the pocketbase instance and create a new record
 		await this.container.pocketbase.collection('players').create(formData);
 
+		// Give alive role and assign it
+		const guild = await this.container.pocketbase.collection('guilds').getList(1, 1, { filter: `guild_id='${interaction.guild_id}'` });
+		if (guild.items.length > 0 && guild.items[0].alive_role) {
+			await this.container.rest.put(Routes.guildMemberRole(interaction.guild_id, interaction.user.id, guild.items[0].alive_role));
+		}
+
 		// Return a followup message saying they have successfully joined the game
 		return interaction.followup({
 			content: 'You have successfully joined the game.'
