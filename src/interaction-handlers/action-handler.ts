@@ -53,8 +53,8 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 			// Give alive role and assign it
 			const guild = await this.container.pocketbase.collection('guilds').getList(1, 1, { filter: `guild_id='${interaction.guild_id}'` });
 			if (interaction.guild_id && guild.items.length > 0 && guild.items[0].alive_role && guild.items[0].dead_role) {
-				await this.container.rest.delete(Routes.guildMemberRole(interaction.guild_id, interaction.user.id, guild.items[0].alive_role));
-				await this.container.rest.put(Routes.guildMemberRole(interaction.guild_id, interaction.user.id, guild.items[0].dead_role));
+				await this.container.rest.delete(Routes.guildMemberRole(interaction.guild_id, target.user_id, guild.items[0].alive_role));
+				await this.container.rest.put(Routes.guildMemberRole(interaction.guild_id, target.user_id, guild.items[0].dead_role));
 			}
 		}
 	}
