@@ -25,7 +25,7 @@ export function canExecuteActionRequiringPoints(user: PlayersRecord): [true, nul
 	const difference = (now - last_action_at) / 1000;
 	// If the difference is less than or equal to ACTION_COOLDOWN, return false
 	if (difference <= ACTION_COOLDOWN_SECONDS) {
-		const action_allowed_at = last_action_at / 1000 + ACTION_COOLDOWN_SECONDS;
+		const action_allowed_at = Math.round(last_action_at / 1000 + ACTION_COOLDOWN_SECONDS);
 		// Discord relative timestamp formatting will make the message '...perform an action `in xx minutes`'
 		return [false, `You are on cooldown. You are allowed to perform an action <t:${action_allowed_at}:R>.`];
 	}
