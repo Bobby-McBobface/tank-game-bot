@@ -14,8 +14,9 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 		const user = await this.container.pocketbase.collection('players').getOne<PlayersRecord>(userId);
 
 		// Check if the user can perform an action
-		if (!canExecuteActionRequiringPoints(user)) {
-			return interaction.followup({ content: 'Please obtain more action points or wait.' });
+		const [canPerform, errorMessage] = canExecuteActionRequiringPoints(user);
+		if (!canPerform) {
+			return interaction.followup({ content: errorMessage });
 		}
 
 		// Calculate the distance between the user and the target by their x_pos and y_pos
@@ -23,7 +24,7 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 
 		// If the distance is less than or equal to 2, tell the user off
 		if (distance > 2) {
-			return interaction.followup({ content: 'Invalid.' });
+			return interaction.followup({ content: 'You are not in range. You have moved since the buttons were sent.' });
 		}
 
 		const targetSquare = await this.container.pocketbase
@@ -32,7 +33,7 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 
 		// If someone is occupying the square, don't allow the user to move there
 		if (targetSquare.items.length > 0) {
-			return interaction.followup({ content: 'Invalid.' });
+			return interaction.followup({ content: 'That square is occupied. Someone has moved onto this space since the buttons were sent.' });
 		}
 		await this.container.pocketbase
 			.collection('players')

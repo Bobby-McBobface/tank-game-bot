@@ -15,8 +15,9 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 		const target = await this.container.pocketbase.collection('players').getOne<PlayersRecord>(targetId);
 
 		// Check if the user can perform an action
-		if (!canExecuteActionRequiringPoints(user)) {
-			return interaction.followup({ content: 'Please obtain more action points or wait.' });
+		const [canPerform, errorMessage] = canExecuteActionRequiringPoints(user);
+		if (!canPerform) {
+			return interaction.followup({ content: errorMessage });
 		}
 
 		// Calculate the distance between the user and the target by their x_pos and y_pos
@@ -24,12 +25,13 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 
 		// If the distance is less than or equal to 2, tell the user off
 		if (distance > 2) {
-			return interaction.followup({ content: 'Invalid.' });
+			return interaction.followup({ content: 'You are not in range. You and/or your target have moved since the buttons were sent.' });
 		}
 		if (Number(action) === Actions.attack) await this.attack(user, target);
 		else if (Number(action) === Actions.give_points) await this.give_points(user, target);
-		else return interaction.followup({ content: 'This should never happen. ' });
-		return interaction.followup({ content: 'Success' });
+		else return interaction.followup({ content: 'This should never happen.' });
+
+		return interaction.followup({ content: 'Success.' });
 	}
 
 	private async attack(user: PlayersRecord, target: PlayersRecord) {
