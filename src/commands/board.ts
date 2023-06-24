@@ -9,7 +9,9 @@ import { createCanvas, loadImage } from 'canvas';
 		.setDescription('View the board.')
 )
 export class UserCommand extends Command {
-	private canvas = createCanvas(640, 400);
+	private cellSize = 64;
+
+	private canvas = createCanvas(this.cellSize * BOARD_WIDTH, this.cellSize * BOARD_HEIGHT);
 	private ctx = this.canvas.getContext('2d');
 
 	private healthColours = {
@@ -17,8 +19,6 @@ export class UserCommand extends Command {
 		2: 'yellow',
 		1: 'red'
 	} as const;
-
-	private gridSize = 40;
 
 	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
 		await interaction.defer();
@@ -39,12 +39,12 @@ export class UserCommand extends Command {
 		// Set the fill style to the given color
 		this.ctx.fillStyle = color;
 		// Draw a rectangle with 40 by 40 pixels at the given x and y coordinates
-		this.ctx.fillRect(x * this.gridSize, y * this.gridSize, this.gridSize, this.gridSize);
+		this.ctx.fillRect(x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
 		// Set the stroke style to black
 		this.ctx.strokeStyle = 'black';
 		this.ctx.lineWidth = 1;
 		// Draw a border around the rectangle
-		this.ctx.strokeRect(x * this.gridSize, y * this.gridSize, this.gridSize, this.gridSize);
+		this.ctx.strokeRect(x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
 	}
 
 	// Define a function to draw an avatar
@@ -54,17 +54,23 @@ export class UserCommand extends Command {
 		// Set the image source to the file URL
 		const image = await loadImage(Buffer.from(await (await fetch(fileURL)).arrayBuffer()));
 		// Draw the image with 40 by 40 pixels at the given x and y coordinates
-		this.ctx.drawImage(image, x * this.gridSize, y * this.gridSize, this.gridSize, this.gridSize);
+		this.ctx.drawImage(image, x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
 		// Draw a border around the rectangle depending on the health
 		this.ctx.strokeStyle = this.healthColours[player.health as 3 | 2 | 1];
 		this.ctx.lineWidth = 4;
-		// Ensure the rectangle is in the centre of the grid
-		this.ctx.strokeRect(x * 40 + 2, y * 40 + 2, 36, 36);
+		// Ensure the rectangle is in the centre of the grid, and is a bit smaller than the size of the cell so it doesn't overflow into other cells
+		this.ctx.strokeRect(
+			x * this.cellSize + this.ctx.lineWidth / 2,
+			y * this.cellSize + this.ctx.lineWidth / 2,
+			this.cellSize - this.ctx.lineWidth,
+			this.cellSize - this.ctx.lineWidth
+		);
 	}
 
 	// Define a function to create the grid image
 	private async createGrid(players: PlayersRecord[]) {
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.ctx.imageSmoothingEnabled = false;
 		// Loop through the rows and columns of the grid. Draw the cells first, then draw the avatars
 		for (let x = 0; x < BOARD_WIDTH; x++) {
 			for (let y = 0; y < BOARD_HEIGHT; y++) {
