@@ -42,7 +42,7 @@ export class UserCommand extends Command {
 			x_pos = Math.floor(Math.random() * BOARD_WIDTH);
 			y_pos = Math.floor(Math.random() * BOARD_HEIGHT);
 			attempts++;
-		} while (players.find((v) => v.x_pos === x_pos && v.y_pos === y_pos) || attempts < 200);
+		} while (players.find((v) => v.x_pos === x_pos && v.y_pos === y_pos) && attempts < 200);
 
 		if (attempts >= 200) {
 			return interaction.followup({
