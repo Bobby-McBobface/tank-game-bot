@@ -74,7 +74,7 @@ export class UserCommand extends Command {
 		}
 		// Draw the user's action points on top of their avatar
 		// Set the font size and style
-		this.ctx.font = '20px Arial';
+		this.ctx.font = '20px sans-serif';
 		// Set the text alignment
 		this.ctx.textAlign = 'right';
 		this.ctx.textBaseline = 'bottom';
