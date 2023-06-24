@@ -1,4 +1,5 @@
 import { BOARD_HEIGHT, BOARD_WIDTH } from '#lib/config';
+import { type PlayersRecord } from '#lib/database';
 import { Command, RegisterCommand } from '@skyra/http-framework';
 import { Routes, type RESTPostAPIGuildEmojiResult, type RESTPostAPIGuildEmojiJSONBody } from 'discord-api-types/v10';
 
@@ -20,13 +21,35 @@ export class UserCommand extends Command {
 		const { avatar } = interaction.user;
 
 		// Check if the player is already in the game by querying the database
-		const player = await this.container.pocketbase.collection('players').getList(1, 1, {
+		const player = await this.container.pocketbase.collection('players').getList<PlayersRecord>(1, 1, {
 			filter: `user_id='${user_id}' && guild_id='${guild_id}'`
 		});
 		// If the player exists, return a followup message saying they have already joined
 		if (player.items.length > 0) {
 			return interaction.followup({ content: 'You have already joined the game.' });
 		}
+
+		const players = await this.container.pocketbase.collection('players').getFullList<PlayersRecord>({
+			filter: `user_id='${user_id}' && guild_id='${guild_id}'`
+		});
+
+		// Generate a random x_pos and y_pos between 0 and BOARD_WIDTH and 0 and BOARD_HEIGHT respectively
+		// If there's already a player in the position, try again up to 200 attempts
+		let x_pos: number;
+		let y_pos: number;
+		let attempts = 0;
+		do {
+			x_pos = Math.floor(Math.random() * BOARD_WIDTH);
+			y_pos = Math.floor(Math.random() * BOARD_HEIGHT);
+			attempts++;
+		} while (players.find((v) => v.x_pos === x_pos && v.y_pos === y_pos) || attempts < 200);
+
+		if (attempts >= 200) {
+			return interaction.followup({
+				content: 'Could not place you on the board. Perhaps the board is full. If it is not, try executing the command again.'
+			});
+		}
+
 		// Download the avatar from the user using the rest instance and the avatar hash
 		let avatarUrl;
 		if (avatar === null) {
@@ -47,10 +70,6 @@ export class UserCommand extends Command {
 		})) as RESTPostAPIGuildEmojiResult;
 
 		const emote_id = emojiData.id;
-
-		// Generate a random x_pos and y_pos between 0 and BOARD_WIDTH and 0 and BOARD_HEIGHT respectively
-		const x_pos = Math.floor(Math.random() * BOARD_WIDTH);
-		const y_pos = Math.floor(Math.random() * BOARD_HEIGHT);
 
 		// Set the health to 3 and action points to 0
 		const health = 3;
