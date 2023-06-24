@@ -20,6 +20,10 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 			return interaction.followup({ content: errorMessage });
 		}
 
+		if (target.health === 0) {
+			return interaction.followup({ content: 'The person you are targetting has died.' });
+		}
+
 		// Calculate the distance between the user and the target by their x_pos and y_pos
 		const distance = Math.max(Math.abs(user.x_pos - target.x_pos), Math.abs(user.y_pos - target.y_pos));
 

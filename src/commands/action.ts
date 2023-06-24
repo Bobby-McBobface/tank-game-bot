@@ -103,6 +103,8 @@ export class UserCommand extends Command {
 							if (player) {
 								// Set the customId to action, player's pocketbase ID and target's pocketbase ID
 								button.setCustomId(`action-handler.${interaction.user.id}.${action}.${myself.id}.${player.id}`);
+								// Don't allow sending or attacking dead players
+								if (player.health <= 0) button.setDisabled(true);
 							} else {
 								// Otherwise, disable the button and set the label to "Empty"
 								button.setDisabled(true);

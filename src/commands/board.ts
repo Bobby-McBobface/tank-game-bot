@@ -18,7 +18,8 @@ export class UserCommand extends Command {
 	private healthColours = {
 		3: 'green',
 		2: 'yellow',
-		1: 'red'
+		1: 'red',
+		0: 'grey'
 	} as const;
 
 	public override async chatInputRun(interaction: Command.ChatInputInteraction) {
@@ -57,7 +58,7 @@ export class UserCommand extends Command {
 		// Draw the image with 40 by 40 pixels at the given x and y coordinates
 		this.ctx.drawImage(image, x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
 		// Draw a border around the rectangle depending on the health
-		this.ctx.strokeStyle = this.healthColours[player.health as 3 | 2 | 1];
+		this.ctx.strokeStyle = this.healthColours[player.health as 3 | 2 | 1 | 0];
 		// Ensure the rectangle is in the centre of the grid, and is a bit smaller than the size of the cell so it doesn't overflow into other cells
 		this.ctx.strokeRect(
 			x * this.cellSize + this.ctx.lineWidth / 2,
@@ -65,6 +66,12 @@ export class UserCommand extends Command {
 			this.cellSize - this.ctx.lineWidth,
 			this.cellSize - this.ctx.lineWidth
 		);
+		if (player.health <= 0) {
+			// Grey overlay
+			this.ctx.fillStyle = 'rgba(0,0,0,0.7)';
+			this.ctx.fillRect(x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
+			return;
+		}
 		// Draw the user's action points on top of their avatar
 		// Set the font size and style
 		this.ctx.font = '20px Arial';
