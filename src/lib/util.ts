@@ -1,8 +1,8 @@
 import { type PlayersRecord } from '#lib/database';
-import { ACTION_COOLDOWN_SECONDS } from './config';
+import { ACTION_COOLDOWN_SECONDS } from '#lib/config';
 
 /**
- * Defind a function to check if the user can execute an action
+ * Define a function to check if the user can execute an action
  * @param user PlayersRecord
  * @returns A tuple containing if the action succeeded, or if the action failed. If it failed, an error message will be returned.
  */
