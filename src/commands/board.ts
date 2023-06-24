@@ -65,6 +65,20 @@ export class UserCommand extends Command {
 			this.cellSize - this.ctx.lineWidth,
 			this.cellSize - this.ctx.lineWidth
 		);
+		// Draw the user's action points on top of their avatar
+		// Set the font size and style
+		this.ctx.font = '20px Arial';
+		// Set the text alignment
+		this.ctx.textAlign = 'right';
+		this.ctx.textBaseline = 'bottom';
+		// Set the text color to black for the outline
+		this.ctx.strokeStyle = 'black';
+		// Use strokeText to draw the outline of the text at the bottom right of the cell
+		this.ctx.strokeText(`${player.action_points} `, (x + 1) * this.cellSize, (y + 1) * this.cellSize, this.cellSize / 2);
+		// Set the text color to white for the fill
+		this.ctx.fillStyle = 'white';
+		// Use fillText to draw the fill of the text at the bottom right of the cell
+		this.ctx.fillText(`${player.action_points} `, (x + 1) * this.cellSize, (y + 1) * this.cellSize, this.cellSize / 2);
 	}
 
 	// Define a function to create the grid image
