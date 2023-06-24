@@ -5,7 +5,7 @@ import { Routes, type RESTPostAPIGuildEmojiResult, type RESTPostAPIGuildEmojiJSO
 @RegisterCommand((builder) =>
 	builder //
 		.setName('join-game')
-		.setDescription('Join the game and create a new tank with a random position on the grid.')
+		.setDescription('Join the game and create a new tank with a random position on the grid')
 		.setDMPermission(false)
 )
 export class UserCommand extends Command {

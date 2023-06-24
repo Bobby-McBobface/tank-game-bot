@@ -6,7 +6,8 @@ import { createCanvas, loadImage } from 'canvas';
 @RegisterCommand((builder) =>
 	builder //
 		.setName('board')
-		.setDescription('View the board.')
+		.setDescription('View the current state of the game board.')
+		.setDMPermission(false)
 )
 export class UserCommand extends Command {
 	private cellSize = 64;

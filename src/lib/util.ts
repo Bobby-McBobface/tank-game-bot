@@ -36,6 +36,6 @@ export function canExecuteActionRequiringPoints(user: PlayersRecord): [true, nul
 
 export enum Actions {
 	move,
-	give_points,
+	send_points,
 	attack
 }

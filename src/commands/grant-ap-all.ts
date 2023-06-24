@@ -4,8 +4,8 @@ import { PermissionFlagsBits } from 'discord-api-types/v10';
 
 @RegisterCommand((builder) =>
 	builder //
-		.setName('give-ap')
-		.setDescription('Give 1 action point to everyone in the guild')
+		.setName('grant-ap-all')
+		.setDescription('Grant one action point to every tank in the game')
 		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 )

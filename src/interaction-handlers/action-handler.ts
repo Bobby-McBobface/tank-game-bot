@@ -28,13 +28,14 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 			return interaction.followup({ content: 'You are not in range. You and/or your target have moved since the buttons were sent.' });
 		}
 		if (Number(action) === Actions.attack) await this.attack(user, target);
-		else if (Number(action) === Actions.give_points) await this.give_points(user, target);
+		else if (Number(action) === Actions.send_points) await this.give_points(user, target);
 		else return interaction.followup({ content: 'This should never happen.' });
 
 		return interaction.followup({ content: 'Success.' });
 	}
 
 	private async attack(user: PlayersRecord, target: PlayersRecord) {
+		// TODO: transactions when they get added to Pocketbase
 		await this.container.pocketbase.collection('players').update<PlayersRecord>(user.id, {
 			action_points: user.action_points - 1,
 			last_action_at: new Date().toISOString()
@@ -45,6 +46,7 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 	}
 
 	private async give_points(user: PlayersRecord, target: PlayersRecord) {
+		// TODO: transactions when they get added to Pocketbase
 		await this.container.pocketbase.collection('players').update<PlayersRecord>(user.id, {
 			action_points: user.action_points - 1,
 			last_action_at: new Date().toISOString()

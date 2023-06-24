@@ -8,14 +8,23 @@ import { BOARD_HEIGHT, BOARD_WIDTH } from '#lib/config';
 @RegisterCommand((builder) =>
 	builder //
 		.setName('action')
-		.setDescription('Hmmm')
+		.setDescription('Perform an action with your tank')
 		.setDMPermission(false)
 )
 export class UserCommand extends Command {
 	@RegisterSubCommand((builder) =>
 		builder //
+			.setName('attack')
+			.setDescription('Fire your cannon at a tank within range and reduce their health by one')
+	)
+	public async attack(interaction: Command.ChatInputInteraction) {
+		return this.sendButtons(interaction, Actions.attack);
+	}
+
+	@RegisterSubCommand((builder) =>
+		builder //
 			.setName('move')
-			.setDescription('Move your tank')
+			.setDescription('Drive your tank to a different location on the grid within range')
 	)
 	public async move(interaction: Command.ChatInputInteraction) {
 		return this.sendButtons(interaction, Actions.move);
@@ -23,20 +32,11 @@ export class UserCommand extends Command {
 
 	@RegisterSubCommand((builder) =>
 		builder //
-			.setName('give-points')
-			.setDescription('Give points to someone')
+			.setName('send-ap')
+			.setDescription('Send one action point to a tank within range')
 	)
-	public async givePoints(interaction: Command.ChatInputInteraction) {
-		return this.sendButtons(interaction, Actions.attack);
-	}
-
-	@RegisterSubCommand((builder) =>
-		builder //
-			.setName('attack')
-			.setDescription('Attack someone')
-	)
-	public async attack(interaction: Command.ChatInputInteraction) {
-		return this.sendButtons(interaction, Actions.attack);
+	public async sendPoints(interaction: Command.ChatInputInteraction) {
+		return this.sendButtons(interaction, Actions.send_points);
 	}
 
 	private async sendButtons(interaction: Command.ChatInputInteraction, action: Actions) {
@@ -98,7 +98,7 @@ export class UserCommand extends Command {
 								button.setLabel('឵');
 							}
 							break;
-						case Actions.give_points:
+						case Actions.send_points:
 						case Actions.attack:
 							if (player) {
 								// Set the customId to action, player's pocketbase ID and target's pocketbase ID
