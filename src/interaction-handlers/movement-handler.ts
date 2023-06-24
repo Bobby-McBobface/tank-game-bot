@@ -35,9 +35,12 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 		if (targetSquare.items.length > 0) {
 			return interaction.followup({ content: 'That square is occupied. Someone has moved onto this space since the buttons were sent.' });
 		}
-		await this.container.pocketbase
-			.collection('players')
-			.update<PlayersRecord>(userId, { x_pos: newX, y_pos: newY, last_action_at: new Date().toISOString() });
+		await this.container.pocketbase.collection('players').update<PlayersRecord>(userId, {
+			x_pos: newX,
+			y_pos: newY,
+			action_points: user.action_points - 1,
+			last_action_at: new Date().toISOString()
+		});
 
 		return interaction.followup({ content: 'Success.' });
 	}
