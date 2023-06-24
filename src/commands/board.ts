@@ -57,7 +57,6 @@ export class UserCommand extends Command {
 		this.ctx.drawImage(image, x * this.cellSize, y * this.cellSize, this.cellSize, this.cellSize);
 		// Draw a border around the rectangle depending on the health
 		this.ctx.strokeStyle = this.healthColours[player.health as 3 | 2 | 1];
-		this.ctx.lineWidth = 4;
 		// Ensure the rectangle is in the centre of the grid, and is a bit smaller than the size of the cell so it doesn't overflow into other cells
 		this.ctx.strokeRect(
 			x * this.cellSize + this.ctx.lineWidth / 2,
@@ -71,7 +70,7 @@ export class UserCommand extends Command {
 	private async createGrid(players: PlayersRecord[]) {
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 		this.ctx.imageSmoothingEnabled = false;
-		// Loop through the rows and columns of the grid. Draw the cells first, then draw the avatars
+		// Loop through the rows and columns of the grid. Draw the cells first
 		for (let x = 0; x < BOARD_WIDTH; x++) {
 			for (let y = 0; y < BOARD_HEIGHT; y++) {
 				// Define the color variable
@@ -88,16 +87,18 @@ export class UserCommand extends Command {
 			}
 		}
 
+		this.ctx.lineWidth = 4;
+		const drawAvatarPromises: Promise<void>[] = [];
 		for (let x = 0; x < BOARD_WIDTH; x++) {
 			for (let y = 0; y < BOARD_HEIGHT; y++) {
 				// Query the database for a user at the current position
 				const row = players.find((v) => v.x_pos === x && v.y_pos === y);
-
 				// If there is a user, draw their avatar
 				if (row) {
-					await this.drawAvatar(x, y, row);
+					drawAvatarPromises.push(this.drawAvatar(x, y, row));
 				}
 			}
 		}
+		await Promise.all(drawAvatarPromises);
 	}
 }
