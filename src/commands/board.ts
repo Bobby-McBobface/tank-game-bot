@@ -1,7 +1,9 @@
 import { BOARD_HEIGHT, BOARD_WIDTH } from '#lib/config';
 import type { PlayersRecord } from '#lib/database';
 import { Command, RegisterCommand } from '@skyra/http-framework';
-import { createCanvas, loadImage } from 'canvas';
+import { createCanvas, loadImage, registerFont } from 'canvas';
+
+registerFont('./assets/Roboto-Regular.ttf', { family: 'Roboto' });
 
 @RegisterCommand((builder) =>
 	builder //
@@ -74,7 +76,7 @@ export class UserCommand extends Command {
 		}
 		// Draw the user's action points on top of their avatar
 		// Set the font size and style
-		this.ctx.font = '20px sans-serif';
+		this.ctx.font = '20px Roboto';
 		// Set the text alignment
 		this.ctx.textAlign = 'right';
 		this.ctx.textBaseline = 'bottom';

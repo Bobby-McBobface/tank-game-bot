@@ -22,6 +22,8 @@ WORKDIR /usr/src/app
 
 ENV NODE_ENV="production"
 
+COPY --chown=node:node assets/ assets/
+
 RUN yarn workspaces focus --all --production
 COPY --chown=node:node --from=builder /usr/src/app/dist dist
 
