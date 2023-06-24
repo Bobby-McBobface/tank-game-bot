@@ -14,7 +14,7 @@ export class UserCommand extends Command {
 		await interaction.defer();
 		const players = await this.container.pocketbase
 			.collection('players')
-			.getFullList<PlayersRecord>({ filter: `guild_id=${interaction.guild_id}` });
+			.getFullList<PlayersRecord>({ filter: `guild_id='${interaction.guild_id}'` });
 
 		// No UPDATE ... WHERE ... and transactions in Pocketbase. TODO: refactor when feature is implemented
 		const promises: Promise<any>[] = [];

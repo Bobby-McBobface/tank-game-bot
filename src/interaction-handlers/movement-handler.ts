@@ -29,7 +29,7 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 
 		const targetSquare = await this.container.pocketbase
 			.collection('players')
-			.getList(1, 1, { filter: `guild_id=${interaction.guild_id} && x_pos=${newX} && y_pos=${newY}` });
+			.getList(1, 1, { filter: `guild_id='${interaction.guild_id}' && x_pos=${newX} && y_pos=${newY}` });
 
 		// If someone is occupying the square, don't allow the user to move there
 		if (targetSquare.items.length > 0) {
