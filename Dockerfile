@@ -6,6 +6,7 @@ ENV HUSKY=0 \
     LOG_LEVEL=info
 
 COPY --chown=node:node pnpm-lock.yaml package.json .npmrc ./
+RUN sed -i 's/"prepare": "husky install .github\/husky"/"prepare": ""/' ./package.json
 RUN corepack enable
 
 FROM base as builder
