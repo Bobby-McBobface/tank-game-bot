@@ -4,13 +4,6 @@ node_modules/
 .idea/
 *.iml
 
-# Yarn files
-.yarn/install-state.gz
-.yarn/build-state.yml
-.yarn/*
-!.yarn/releases
-!.yarn/plugins
-
 # Output directories
 dist/
 dist-tsc/
@@ -21,6 +14,7 @@ dist-tsc/
 
 # Ignore package locks
 package-lock.json
+yarn.lock
 
 # Environment variables
 .env.local

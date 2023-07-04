@@ -5,17 +5,18 @@ ENV HUSKY=0 \
     CI=true \
     LOG_LEVEL=info
 
-COPY --chown=node:node yarn.lock package.json .yarnrc.yml ./
-COPY --chown=node:node .yarn/ .yarn/
+COPY --chown=node:node pnpm-lock.yaml package.json .npmrc ./
+RUN corepack enable
 
 FROM base as builder
 WORKDIR /usr/src/app
 
+RUN pnpm install --frozen-lockfile
+
 COPY --chown=node:node tsconfig.base.json ./
 COPY --chown=node:node src/ src/
 
-RUN yarn install --immutable
-RUN yarn run build
+RUN pnpm run build
 
 FROM base AS runner
 WORKDIR /usr/src/app
@@ -23,9 +24,9 @@ WORKDIR /usr/src/app
 ENV NODE_ENV="production"
 
 COPY --chown=node:node assets/ assets/
-
-RUN yarn workspaces focus --all --production
 COPY --chown=node:node --from=builder /usr/src/app/dist dist
 
+RUN pnpm prune --prod
+
 USER node
-CMD [ "yarn", "run", "start"]
+CMD [ "pnpm", "run", "start"]

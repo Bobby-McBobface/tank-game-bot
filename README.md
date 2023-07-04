@@ -29,8 +29,8 @@ I mean, Discord's slash commands menu shows you all available command and descri
 There's a Dockerfile, what more do you expect?
 
 ```
-yarn
-yarn start
+pnpm
+pnpm start
 ```
 
 The database is [Pocketbase](https://pocketbase.io), migrations are in the `pb_migrations` directory.
