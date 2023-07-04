@@ -1,4 +1,4 @@
-import type { PlayersRecord } from '#lib/database';
+import type { GuildsRecord, PlayersRecord } from '#lib/database';
 import { canExecuteActionRequiringPoints, Actions } from '#lib/util';
 import { InteractionHandler } from '@skyra/http-framework';
 import { Routes } from 'discord-api-types/v10';
@@ -50,12 +50,14 @@ export class MessageComponentInteractionHandler extends InteractionHandler {
 		});
 
 		if (target.health - 1 <= 0) {
-			// Give alive role and assign it
-			const guild = await this.container.pocketbase.collection('guilds').getList(1, 1, { filter: `guild_id='${interaction.guild_id}'` });
-			if (interaction.guild_id && guild.items.length > 0 && guild.items[0].alive_role && guild.items[0].dead_role) {
+			const guild = await this.container.pocketbase
+				.collection('guilds')
+				.getList<GuildsRecord>(1, 1, { filter: `guild_id='${interaction.guild_id}'` });
+			if (!interaction.guild_id || guild.items.length === 0) return;
+			if (guild.items[0].alive_role)
 				await this.container.rest.delete(Routes.guildMemberRole(interaction.guild_id, target.user_id, guild.items[0].alive_role));
+			if (guild.items[0].dead_role)
 				await this.container.rest.put(Routes.guildMemberRole(interaction.guild_id, target.user_id, guild.items[0].dead_role));
-			}
 		}
 	}
 

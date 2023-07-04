@@ -1,3 +1,4 @@
+import { type GuildsRecord } from '#lib/database';
 import { Command, RegisterCommand, type TransformedArguments } from '@skyra/http-framework';
 import { PermissionFlagsBits } from 'discord-api-types/v10';
 
@@ -31,9 +32,11 @@ export class UserCommand extends Command {
 		if (guild.items.length === 0) {
 			await this.container.pocketbase
 				.collection('guilds')
-				.create({ guild_id: interaction.guild_id, alive_role: alive_role?.id, dead_role: dead_role?.id });
+				.create<GuildsRecord>({ guild_id: interaction.guild_id, alive_role: alive_role?.id, dead_role: dead_role?.id });
 		} else {
-			await this.container.pocketbase.collection('guilds').update(guild.items[0].id, { alive_role: alive_role?.id, dead_role: dead_role?.id });
+			await this.container.pocketbase
+				.collection('guilds')
+				.update<GuildsRecord>(guild.items[0].id, { alive_role: alive_role?.id, dead_role: dead_role?.id });
 		}
 		return interaction.followup({ content: 'Success.' });
 	}

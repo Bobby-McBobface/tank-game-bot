@@ -1,5 +1,5 @@
 import { BOARD_HEIGHT, BOARD_WIDTH } from '#lib/config';
-import { type PlayersRecord } from '#lib/database';
+import { type GuildsRecord, type PlayersRecord } from '#lib/database';
 import { Command, RegisterCommand } from '@skyra/http-framework';
 import { Routes, type RESTPostAPIGuildEmojiResult, type RESTPostAPIGuildEmojiJSONBody } from 'discord-api-types/v10';
 
@@ -94,7 +94,9 @@ export class UserCommand extends Command {
 		await this.container.pocketbase.collection('players').create(formData);
 
 		// Give alive role and assign it
-		const guild = await this.container.pocketbase.collection('guilds').getList(1, 1, { filter: `guild_id='${interaction.guild_id}'` });
+		const guild = await this.container.pocketbase
+			.collection('guilds')
+			.getList<GuildsRecord>(1, 1, { filter: `guild_id='${interaction.guild_id}'` });
 		if (guild.items.length > 0 && guild.items[0].alive_role) {
 			await this.container.rest.put(Routes.guildMemberRole(interaction.guild_id, interaction.user.id, guild.items[0].alive_role));
 		}

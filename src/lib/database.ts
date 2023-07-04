@@ -18,6 +18,12 @@ export interface PlayersRecord extends Record {
 	last_action_at: string;
 }
 
+export interface GuildsRecord extends Record {
+	guild_id: string;
+	alive_role: string;
+	dead_role: string;
+}
+
 declare module '@sapphire/pieces' {
 	export interface Container {
 		pocketbase: PocketBase;
